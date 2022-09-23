@@ -1,5 +1,5 @@
 import {Locator, Page} from "@playwright/test";
-import JobOpening from "../types/JobOpening";
+import JobOpening from "../types/dto/JobOpening";
 
 export default class CareersPage {
     private readonly page: Page;

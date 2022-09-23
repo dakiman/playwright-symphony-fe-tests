@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import AboutUsPage from "../pages/AboutUsPage";
 import CareersPage from "../pages/CareersPage";
 import NavbarComponent from "../pages/NavbarComponent";
-import JobOpening from "../types/JobOpening";
+import JobOpening from "../types/dto/JobOpening";
 import {readFileAsJson, writeToFile} from "../utils/FileUtils";
 
 let aboutUsPage: AboutUsPage;
@@ -14,7 +14,7 @@ test.beforeEach(async ({page}) => {
     aboutUsPage = new AboutUsPage(page);
     careersPage = new CareersPage(page);
     navbarComponent = new NavbarComponent(page);
-    expectedMetaDetailsCategories = readFileAsJson('./data/metaDetailsCategories.json');
+    expectedMetaDetailsCategories = readFileAsJson('./data/expectedMetaDetailsCategories.json');
     await page.goto('https://symphony.is/');
 })
 
@@ -29,7 +29,7 @@ test('Count the number of open positions', async () => {
     await navbarComponent.clickCurrentOpenings();
 
     let jobs = await careersPage.getAllJobsTitleAndLocation();
-    expect(jobs.length).toBe(87);
+    expect(jobs.length).toBe(86);
 })
 
 test('Retrieve all job openings titles and locations', async () => {
