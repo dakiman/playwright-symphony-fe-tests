@@ -18,21 +18,21 @@ test.beforeEach(async ({page}) => {
     await page.goto('https://symphony.is/');
 })
 
-test('Navigates to `About us` page and verifies the sidebar items', async ({page}) => {
+test('Navigate to `About us` page and verifies the sidebar items', async () => {
     await navbarComponent.clickAboutUsNavButton();
     let metaDetailsCategories = await aboutUsPage.getMetaDetailsCategoriesContent();
 
     expect(metaDetailsCategories).toEqual(expectedMetaDetailsCategories);
 })
 
-test('Counts the number of open positions', async ({page}) => {
+test('Count the number of open positions', async () => {
     await navbarComponent.clickCurrentOpenings();
 
     let jobs = await careersPage.getAllJobsTitleAndLocation();
     expect(jobs.length).toBe(87);
 })
 
-test('Retrieves all job openings titles and locations', async ({page}) => {
+test('Retrieve all job openings titles and locations', async () => {
     await navbarComponent.clickCurrentOpenings();
     let jobOpenings: Array<JobOpening> = await careersPage.getAllJobsTitleAndLocation();
 
