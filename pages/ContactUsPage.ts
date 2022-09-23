@@ -9,6 +9,7 @@ export default class ContactUsPage {
     private readonly messageInput: Locator;
     private readonly termsAndConditionsCheckbox: Locator;
     private readonly submitButton: Locator;
+    private readonly confirmationModal: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -19,6 +20,7 @@ export default class ContactUsPage {
         this.messageInput = page.locator('textarea[name="message"]');
         this.termsAndConditionsCheckbox = page.locator('.leaveAMessage--footer-checkbox-icon');
         this.submitButton = page.locator('text=Submit');
+        this.confirmationModal = page.locator('.leaveAMessage--success');
     }
 
     public async fillNameInput(name: string): Promise<void> {
@@ -47,5 +49,15 @@ export default class ContactUsPage {
 
     public async clickSubmitButton(): Promise<void> {
         await this.submitButton.click();
+    }
+
+    public async isConfirmationModalVisible(): Promise<boolean> {
+        //TODO Move to util/base class
+        try {
+            await this.confirmationModal.waitFor({ state: 'visible', timeout: 8000 });
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }

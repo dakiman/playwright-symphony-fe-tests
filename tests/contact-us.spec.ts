@@ -1,5 +1,5 @@
 import ContactUsPage from "../pages/ContactUsPage";
-import {test} from "@playwright/test";
+import {expect, test} from "@playwright/test";
 import FooterComponent from "../pages/FooterComponent";
 
 let contactUsPage: ContactUsPage;
@@ -21,4 +21,8 @@ test('Fill contact us form', async () => {
     await contactUsPage.fillMessageInput('This is a test message');
     await contactUsPage.checkTermsAndConditionsCheckbox();
     await contactUsPage.clickSubmitButton();
+
+    let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
+
+    expect(confirmationModalVisible).toBeTruthy();
 })
