@@ -19,7 +19,5 @@ export default class ContactFormActions {
         await this.contactUsPage.fillMessageInput(form.message);
         if(form.checkTermsAndConditions)
             await this.contactUsPage.checkTermsAndConditionsCheckbox();
-        // contactUsPage
-        // await this.contactUsPage.clickSubmitButton();
     }
 }

@@ -9,6 +9,8 @@ let contactUsPage: ContactUsPage;
 let footerComponent: FooterComponent;
 let contactFormActions: ContactFormActions;
 let defaultContactFormData: ContactUsForm;
+let invalidEmails = ['test', 'test@test.', 'test@#123.com', 'test@test..com', '@test.com']
+let validEmails = ['test@yahoo.com', 'test@gmail.com', 'test+123@hotmail.com', 'test@something.co.uk']
 
 test.beforeEach(async ({page}) => {
     contactUsPage = new ContactUsPage(page);
@@ -19,39 +21,68 @@ test.beforeEach(async ({page}) => {
     await footerComponent.clickAcceptCookiesButton();
 })
 
-
-test('Fill contact us form', async () => {
-    await contactUsPage.fillNameInput('John Doe');
-    await contactUsPage.fillEmailInput('test@test.com');
-    await contactUsPage.fillCompanyNameInput('Test Company');
-    await contactUsPage.fillContactNumberInput('123456789');
-    await contactUsPage.fillMessageInput('This is a test message');
-    await contactUsPage.checkTermsAndConditionsCheckbox();
-    await contactUsPage.clickSubmitButton();
-
-    let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
-    expect(confirmationModalVisible).toBeTruthy();
-})
-
-test('Fill contact us form - action', async () => {
-    await contactFormActions.fillContactForm({
-        name: 'John Doe',
-        email: 'test@test.com',
-        companyName: 'Test Company',
-        contactNumber: '123456789',
-        message: 'This is a test message',
-        checkTermsAndConditions: true
-    })
-    await contactUsPage.clickSubmitButton();
-
-    let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
-    expect(confirmationModalVisible).toBeTruthy();
-})
-
-test('Fill contact us form - action with prebuilt data', async () => {
+test('Send valid contact form message', async () => {
     await contactFormActions.fillContactForm(defaultContactFormData);
     await contactUsPage.clickSubmitButton();
 
     let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
     expect(confirmationModalVisible).toBeTruthy();
 })
+
+validEmails.forEach(email => {
+    test(`Send valid contact form message with valid email ${email}`, async () => {
+        await contactFormActions.fillContactForm({...defaultContactFormData, email});
+        await contactUsPage.clickSubmitButton();
+
+        let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
+        expect(confirmationModalVisible).toBeTruthy();
+    })
+})
+
+test('Send contact form message without agreeing to terms and conditions', async () => {
+    await contactFormActions.fillContactForm({...defaultContactFormData, checkTermsAndConditions: false});
+    await contactUsPage.clickSubmitButton();
+
+    let validationMessageVisible = await contactUsPage.isValidationMessageVisible();
+    expect(validationMessageVisible).toBeTruthy();
+
+    let validationMessageText = await contactUsPage.getValidationMessageContent();
+    expect(validationMessageText).toContain('Please accept the Terms and Conditions before submitting the message');
+})
+
+test('Send contact form message without email', async () => {
+    await contactFormActions.fillContactForm({...defaultContactFormData, email: ''});
+    await contactUsPage.clickSubmitButton();
+
+    let validationMessageVisible = await contactUsPage.isValidationMessageVisible();
+    expect(validationMessageVisible).toBeTruthy();
+
+    let validationMessageText = await contactUsPage.getValidationMessageContent();
+    expect(validationMessageText).toContain('Please fill out the required field: email');
+})
+
+invalidEmails.forEach(email => {
+    test(`Send contact form message with invalid email ${email}`, async () => {
+        await contactFormActions.fillContactForm({...defaultContactFormData, email});
+        await contactUsPage.clickSubmitButton();
+
+        let validationMessageVisible = await contactUsPage.isValidationMessageVisible();
+        expect(validationMessageVisible).toBeTruthy();
+
+        let validationMessageText = await contactUsPage.getValidationMessageContent();
+        expect(validationMessageText).toContain('Please use the correct email format');
+    })
+})
+
+test('Send contact form message without message', async () => {
+    await contactFormActions.fillContactForm({...defaultContactFormData, message: ''});
+    await contactUsPage.clickSubmitButton();
+
+    let validationMessageVisible = await contactUsPage.isValidationMessageVisible();
+    expect(validationMessageVisible).toBeTruthy();
+
+    let validationMessageText = await contactUsPage.getValidationMessageContent();
+    expect(validationMessageText).toContain('Please fill out the required field: message');
+})
+
+
