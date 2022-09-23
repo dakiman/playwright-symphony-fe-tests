@@ -85,4 +85,27 @@ test('Send contact form message without message', async () => {
     expect(validationMessageText).toContain('Please fill out the required field: message');
 })
 
+test('Send contact form message without name', async () => {
+    await contactFormActions.fillContactForm({...defaultContactFormData, name: ''});
+    await contactUsPage.clickSubmitButton();
+
+    let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
+    expect(confirmationModalVisible).toBeTruthy();
+})
+
+test('Send contact form message without company name', async () => {
+    await contactFormActions.fillContactForm({...defaultContactFormData, companyName: ''});
+    await contactUsPage.clickSubmitButton();
+
+    let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
+    expect(confirmationModalVisible).toBeTruthy();
+})
+
+test('Send contact form message without contact number', async () => {
+    await contactFormActions.fillContactForm({...defaultContactFormData, contactNumber: ''});
+    await contactUsPage.clickSubmitButton();
+
+    let confirmationModalVisible = await contactUsPage.isConfirmationModalVisible();
+    expect(confirmationModalVisible).toBeTruthy();
+})
 
