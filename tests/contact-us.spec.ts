@@ -8,15 +8,9 @@ import {readFileAsJson} from "../utils/FileUtils";
 let contactUsPage: ContactUsPage;
 let footerComponent: FooterComponent;
 let contactFormActions: ContactFormActions;
-let defaultContactFormData: ContactUsForm;
-let invalidEmails: Array<string>;
-let validEmails: Array<string>;
-
-test.beforeAll(async () => {
-    defaultContactFormData = readFileAsJson('./data/defaultContactFormData.json');
-    invalidEmails = readFileAsJson('./data/invalidEmails.json');
-    validEmails = readFileAsJson('./data/validEmails.json');
-});
+let defaultContactFormData: ContactUsForm = readFileAsJson('./data/defaultContactFormData.json');
+let invalidEmails: Array<string> = readFileAsJson('./data/invalidEmails.json');
+let validEmails: Array<string> = readFileAsJson('./data/validEmails.json');
 
 test.beforeEach(async ({page}) => {
     contactUsPage = new ContactUsPage(page);
