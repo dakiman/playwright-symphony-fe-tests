@@ -9,14 +9,19 @@ let contactUsPage: ContactUsPage;
 let footerComponent: FooterComponent;
 let contactFormActions: ContactFormActions;
 let defaultContactFormData: ContactUsForm;
-let invalidEmails = ['test', 'test@test.', 'test@#123.com', 'test@test..com', '@test.com']
-let validEmails = ['test@yahoo.com', 'test@gmail.com', 'test+123@hotmail.com', 'test@something.co.uk']
+let invalidEmails: Array<string>;
+let validEmails: Array<string>;
+
+test.beforeAll(async () => {
+    defaultContactFormData = readFileAsJson('./data/defaultContactFormData.json');
+    invalidEmails = readFileAsJson('./data/invalidEmails.json');
+    validEmails = readFileAsJson('./data/validEmails.json');
+});
 
 test.beforeEach(async ({page}) => {
     contactUsPage = new ContactUsPage(page);
     footerComponent = new FooterComponent(page);
     contactFormActions = new ContactFormActions(page);
-    defaultContactFormData = readFileAsJson('./data/defaultContactFormData.json');
     await page.goto('https://symphony.is/contact-us');
     await footerComponent.clickAcceptCookiesButton();
 })

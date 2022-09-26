@@ -1,6 +1,7 @@
 import {Locator, Page} from "@playwright/test";
+import BasePageObject from "./BasePageObject";
 
-export default class ContactUsPage {
+export default class ContactUsPage extends BasePageObject {
     private readonly page: Page;
     private readonly nameInput: Locator;
     private readonly emailInput: Locator;
@@ -13,6 +14,7 @@ export default class ContactUsPage {
     private readonly validationMessage: Locator;
 
     constructor(page: Page) {
+        super();
         this.page = page;
         this.nameInput = page.locator('input[name="name"]');
         this.emailInput = page.locator('input[name="email"]');
@@ -54,25 +56,15 @@ export default class ContactUsPage {
     }
 
     public async isConfirmationModalVisible(): Promise<boolean> {
-        //TODO Move to util/base class
-        try {
-            await this.confirmationModal.waitFor({ state: 'visible', timeout: 8000 });
-            return true;
-        } catch (e) {
-            return false;
-        }
+        return this.isElementVisible(this.confirmationModal);
     }
 
     public async isValidationMessageVisible(): Promise<boolean> {
-        try {
-            await this.validationMessage.waitFor({ state: 'visible', timeout: 8000 });
-            return true;
-        } catch (e) {
-            return false;
-        }
+       return this.isElementVisible(this.validationMessage);
     }
 
     public async getValidationMessageContent(): Promise<string> {
         return this.validationMessage.innerText();
     }
+
 }
